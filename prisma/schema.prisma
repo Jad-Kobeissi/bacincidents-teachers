@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Child {
+  id       Int        @id @default(autoincrement())
+  name     String
+  grade    String
+  parentId Int
+  Parent   Parent     @relation(fields: [parentId], references: [id])
+  Incident Incident[]
+}
+
+model Incident {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  category    Category
+  childId     Int
+  occurredAt  DateTime
+  severity    Int?
+  type        Type
+  Child       Child    @relation(fields: [childId], references: [id])
+}
+
+model Parent {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String  @unique
+  Child Child[]
+}
+
+enum Category {
+  Warning
+  Information
+  Urgent
+  Positive
+}
+
+enum Type {
+  positive
+  negative
+  informational
+}
