@@ -17,10 +17,9 @@ export interface TIncident {
   id: number;
   title: string;
   description: string;
-  category: Category;
   childId: number;
   occurredAt: Date;
-  severity: number | null;
+  severity: Severity;
   type: Type;
   Child: TChild;
 }
@@ -29,18 +28,20 @@ export interface TParent {
   id: number;
   name: string;
   email: string;
-  Child: TChild[];
+  children: TChild[];
 }
-
-enum Category {
-  Warning,
-  Information,
-  Urgent,
-  Positive,
+export interface TAdmin {
+  id: number;
+  identifier: string;
 }
 
 enum Type {
   positive,
   negative,
   informational,
+}
+enum Severity {
+  low,
+  medium,
+  high,
 }

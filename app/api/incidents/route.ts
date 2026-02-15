@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { verify } from "jsonwebtoken";
 import { isEmpty } from "../isEmpty";
+import { TIncident } from "@/app/types";
 
 export async function GET(req: Request) {
   try {
@@ -10,10 +11,15 @@ export async function GET(req: Request) {
 
     if (!authHeader) return new Response("Unauthorized", { status: 401 });
 
+    const url = new URL(req.url);
+    const page = JSON.parse(url.searchParams.get("page") as string) || 1;
+    const skip = (page - 1) * 5;
     const incidents = await prisma.incident.findMany({
       include: {
         Child: true,
       },
+      take: 5,
+      skip,
     });
 
     if (incidents.length == 0)
@@ -28,19 +34,20 @@ export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("Authorization")?.split(" ")[1];
 
-    const decoded = verify(authHeader!, process.env.JWT_SECRET!);
+    const decoded = verify(authHeader!, process.env.JWT_SECRET!) as any;
 
     if (!authHeader) return new Response("Unauthorized", { status: 401 });
 
-    const { title, description, childrenId, category, type } = await req.json();
+    const { title, description, childrenId, category, severity } =
+      await req.json();
 
     if (
       !title ||
       !description ||
       !childrenId ||
       !category ||
-      !type ||
-      isEmpty([title, description, category, type])
+      !severity ||
+      isEmpty([title, description, category, severity])
     )
       return new Response("Please fill all missing fields", { status: 400 });
 
@@ -57,13 +64,7 @@ export async function POST(req: Request) {
     )
       return new Response("Invalid category", { status: 400 });
 
-    if (
-      type.toLocaleLowerCase() !== "positive" &&
-      type.toLocaleLowerCase() !== "negative" &&
-      type.toLocaleLowerCase() !== "informational"
-    )
-      return new Response("Invalid type", { status: 400 });
-
+    let incidents: TIncident[] = [];
     await Promise.all(
       childrenId.map(async (childId: number) => {
         const child = await prisma.child.findUnique({
@@ -76,21 +77,28 @@ export async function POST(req: Request) {
           throw new Response(`Child with id ${childId} not found`, {
             status: 404,
           });
+        console.log(decoded.id);
 
-        await prisma.incident.create({
+        const newIncident = await prisma.incident.create({
           data: {
             title,
             description,
             childId,
             occurredAt: new Date(),
+            severity,
             category:
               category.split("")[0].toLocaleUpperCase() + category.slice(1),
-            type,
+            adminId: decoded.id,
+          },
+          include: {
+            Child: true,
+            Admin: true,
           },
         });
+        incidents.push(newIncident as any);
       }),
     );
-    return new Response("Incidents created successfully", { status: 201 });
+    return Response.json(incidents);
   } catch (error: any) {
     if (error instanceof Response) return error;
     return new Response(error, { status: 500 });

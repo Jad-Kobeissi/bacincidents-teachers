@@ -11,7 +11,9 @@ function Nav() {
         <p className="text-xs text-(--secondaryText)">Know more. Worry less</p>
       </div>
       <div>
-        <button className="button">SignIn</button>
+        <Link href={"/login"} className="button">
+          SignIn
+        </Link>
       </div>
     </nav>
   );
@@ -33,7 +35,7 @@ function Home() {
         </button>
         <button
           className="border-(--borderColor) text-black rounded-md px-4 py-2 ml-4"
-          onClick={() => router.push("/signup")}
+          onClick={() => router.push("#features")}
         >
           Learn More
         </button>

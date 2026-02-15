@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
 :root {
   --background: #f2f0ef;
   --foreground: #171717;
   --placeholderText: #a9a9ac;
   --brandColor: #4384ed;
   --secondaryText: #797b81;
-  --borderColor: #e5e7eb;
+  --borderColor: #afb0b388;
   --dangerColor: #e32510;
+  --dangerColorOpaque: #df382527;
   --warningColor: #eecc43;
+  --warningColorOpaque: #eecc4326;
   --positiveColor: "#34c759";
   --brandColorOpaque: #4384ed4b;
 }
@@ -27,4 +32,7 @@ body {
 }
 .button {
   @apply bg-(--brandColor) text-white px-6 py-2 rounded-md hover:bg-transparent active:bg-transparent hover:text-(--brandColor) active:text-(--brandColor) border border-(--brandColor) transition-colors;
+}
+.input {
+  @apply border border-(--borderColor) px-4 py-1 rounded-md;
 }
