@@ -20,7 +20,7 @@ export interface TIncident {
   childId: number;
   occurredAt: Date;
   severity: Severity;
-  type: Type;
+  category: Category;
   Child: TChild;
 }
 
@@ -35,10 +35,11 @@ export interface TAdmin {
   identifier: string;
 }
 
-enum Type {
-  positive,
-  negative,
-  informational,
+enum Category {
+  Warning,
+  Information,
+  Positive,
+  Urgent,
 }
 enum Severity {
   low,
