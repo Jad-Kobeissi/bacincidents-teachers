@@ -14,7 +14,8 @@ html {
   --dangerColorOpaque: #df382527;
   --warningColor: #eecc43;
   --warningColorOpaque: #eecc4326;
-  --positiveColor: "#34c759";
+  --positiveColor: #34c759;
+  --positiveColorOpaque: #34c75926;
   --brandColorOpaque: #4384ed4b;
 }
 
