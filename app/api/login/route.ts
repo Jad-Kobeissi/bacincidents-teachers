@@ -18,8 +18,8 @@ export async function POST(req: Request) {
       });
       BACToken = res.data.data._token;
 
-      if (res.data.data.is_advisor && res.data.data.is_staff)
-        return new Response("Unauthorized", { status: 401 });
+      // if (res.data.data.is_advisor && res.data.data.is_staff)
+      //   return new Response("Unauthorized", { status: 401 });
 
       const admin = await prisma.admin.findFirst({
         where: {
