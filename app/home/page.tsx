@@ -183,7 +183,6 @@ export default function Home() {
             className="flex flex-col gap-2 items-center justify-center w-5/6 max-[450px]:w-full max-w-175 p-15 rounded-md min-[450px]:border border-(--borderColor)"
             onSubmit={(e) => {
               e.preventDefault();
-              alert(category);
               axios
                 .post(
                   "/api/incidents",
@@ -248,7 +247,6 @@ export default function Home() {
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value);
-                alert(e.target.value);
               }}
             >
               <option value="">Select a Category</option>
