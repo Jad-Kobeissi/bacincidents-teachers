@@ -28,7 +28,6 @@ export default function Login() {
               password,
             })
             .then((res) => {
-              alert("Signed In");
               setCookie("token", res.data.token);
               setCookie("BACToken", res.data.BACToken);
               setUser(res.data.user);
