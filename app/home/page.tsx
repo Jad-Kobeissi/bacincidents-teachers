@@ -5,6 +5,8 @@ import axios from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 import Error from "../Error";
 import { useRouter } from "next/navigation";
+import Nav from "../Nav";
+import Incident from "../Incident";
 
 export default function Home() {
   const [incidents, setIncidents] = useState<TIncident[]>([]);
@@ -72,30 +74,7 @@ export default function Home() {
   }, [filterValue]);
   return (
     <div>
-      <nav className="flex justify-between px-6 py-2">
-        <div className="flex flex-col">
-          <h1 className="text-[1.2rem] font-semibold">TransParent</h1>
-          <p className="text-(--secondaryText)">Teacher dashboard</p>
-        </div>
-        <div>
-          <div
-            onClick={() => {
-              deleteCookie("token");
-              deleteCookie("BACToken");
-              router.push("/");
-            }}
-          >
-            <svg
-              width={40}
-              viewBox="0 0 640 640"
-              fill="currentColor"
-              className="fill-[#1f1f10]"
-            >
-              <path d="M224 160C241.7 160 256 145.7 256 128C256 110.3 241.7 96 224 96L160 96C107 96 64 139 64 192L64 448C64 501 107 544 160 544L224 544C241.7 544 256 529.7 256 512C256 494.3 241.7 480 224 480L160 480C142.3 480 128 465.7 128 448L128 192C128 174.3 142.3 160 160 160L224 160zM566.6 342.6C579.1 330.1 579.1 309.8 566.6 297.3L438.6 169.3C426.1 156.8 405.8 156.8 393.3 169.3C380.8 181.8 380.8 202.1 393.3 214.6L466.7 288L256 288C238.3 288 224 302.3 224 320C224 337.7 238.3 352 256 352L466.7 352L393.3 425.4C380.8 437.9 380.8 458.2 393.3 470.7C405.8 483.2 426.1 483.2 438.6 470.7L566.6 342.7z" />
-            </svg>
-          </div>
-        </div>
-      </nav>
+      <Nav />
       <div className="flex justify-between max-[550px]:flex-col">
         <div className="min-[550px]:w-3/4 w-screen flex flex-col items-center px-10 mt-20">
           <h1 className="text-center text-[1.2rem] font-semibold">Incidents</h1>
@@ -108,7 +87,9 @@ export default function Home() {
                       key={student.id}
                       className="flex gap-3 border border-(--borderColor)  px-4 rounded-sm"
                     >
-                      <h1>{student.name}</h1>
+                      <h1 className="capitalize">
+                        {student.name.toLowerCase()}
+                      </h1>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 640"
@@ -164,8 +145,9 @@ export default function Home() {
                         return Array.from(filtered);
                       });
                     }}
+                    className="capitalize"
                   >
-                    {student.name}
+                    {student.name.toLowerCase()}
                   </h1>
                 </div>
               ))}
@@ -309,24 +291,7 @@ export default function Home() {
           </h1>
           <div className="flex gap-4 flex-col">
             {incidents.map((incident) => (
-              <div
-                key={incident.id}
-                className={`border border-(--borderColor) rounded-full px-6 ${incident.category.toString() === "Warning" ? "bg-(--warningColorOpaque) border-(--warningColor)" : incident.category.toString() === "Information" ? "bg-(--brandColorOpaque) border-(--brandColor)" : incident.category.toString() === "Urgent" ? "bg-(--dangerColorOpaque) border-(--dangerColor)" : incident.category.toString() === "Positive" ? "bg-(--positiveColorOpaque) border-(--positiveColor)" : ""}`}
-              >
-                <div className="flex justify-between w-full">
-                  <h1 className="text-[1.1rem] font-semibold">
-                    {incident.title}
-                  </h1>
-                  <h1>Severity: {incident.severity}</h1>
-                </div>
-                <div>
-                  <h1>
-                    {console.log(incident.Child) as any}
-                    {incident.Child.name.toLocaleLowerCase()} -{" "}
-                    {incident.Child.grade}
-                  </h1>
-                </div>
-              </div>
+              <Incident incident={incident} key={incident.id} />
             ))}
           </div>
           {errorIncidents && (
